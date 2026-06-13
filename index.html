@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>WALLALO — AI Translator</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--navy:#060e1f;--mid:#0d2045;--card:#0f2550;--blue:#2d7dd2;--light:#4a9ede;--glow:rgba(45,125,210,0.4);--white:#e8f4ff;--muted:rgba(232,244,255,0.45)}
+body{font-family:'DM Sans',sans-serif;background:var(--navy);min-height:100vh;color:var(--white)}
+.splash{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem}
+.logo{width:100px;height:100px;border-radius:50%;background:var(--mid);border:3px solid var(--blue);display:flex;align-items:center;justify-content:center;font-size:3rem;margin:0 auto 1.5rem;box-shadow:0 0 40px var(--glow);animation:pulse 3s ease-in-out infinite}
+.title{font-family:'Playfair Display',serif;font-size:3rem;font-weight:900;letter-spacing:0.1em;background:linear-gradient(135deg,#e8f4ff,#4a9ede);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sub{color:var(--light);font-size:0.8rem;letter-spacing:0.3em;margin-top:0.3rem}
+.tag{color:rgba(232,244,255,0.35);font-size:0.8rem;margin-top:0.5rem;font-style:italic}
+.flags{display:flex;gap:8px;justify-content:center;margin-top:1rem;flex-wrap:wrap;max-width:260px;font-size:1.3rem}
+.screen{min-height:100vh;display:flex;flex-direction:column;background:var(--navy)}
+.lhdr{background:linear-gradient(180deg,var(--mid),var(--navy));padding:2rem 1.2rem 1.5rem;text-align:center}
+.lhdr-icon{width:60px;height:60px;border-radius:50%;background:var(--navy);border:2px solid var(--blue);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:1.8rem}
+.lhdr h1{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:900;background:linear-gradient(135deg,#e8f4ff,#4a9ede);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.lhdr p{color:var(--muted);font-size:0.8rem;margin-top:0.3rem}
+.swrap{padding:0.8rem 1rem 0.3rem}
+.si{width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:0.85rem 1rem;color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.9rem;outline:none}
+.si::placeholder{color:rgba(232,244,255,0.25)}
+.lgrid{display:grid;grid-template-columns:1fr 1fr;gap:0.65rem;padding:0.5rem 1rem 2rem}
+.lcard{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:1rem;cursor:pointer;text-align:left}
+.lcard:active{background:rgba(45,125,210,0.15)}
+.lflag{font-size:1.8rem;margin-bottom:0.3rem}
+.lname{color:var(--white);font-size:0.85rem;font-weight:600}
+.lnat{color:var(--light);font-size:0.73rem;margin-top:2px}
+.main{min-height:100vh;background:var(--navy);display:flex;flex-direction:column}
+.hdr{background:linear-gradient(135deg,var(--mid),#1a4a8a);padding:0.9rem 1rem}
+.hrow{display:flex;align-items:center;justify-content:space-between}
+.hleft{display:flex;align-items:center;gap:0.6rem}
+.hicon{width:38px;height:38px;border-radius:50%;background:var(--navy);border:2px solid var(--blue);display:flex;align-items:center;justify-content:center;font-size:1.3rem}
+.htitle{color:var(--white);font-weight:700;font-size:1rem;font-family:'Playfair Display',serif}
+.hsub{color:var(--light);font-size:0.62rem;margin-top:1px}
+.pill{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.18);border-radius:50px;padding:0.35rem 0.75rem;cursor:pointer;display:flex;align-items:center;gap:5px;font-size:0.78rem;color:var(--white)}
+.mbody{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem 1.5rem;text-align:center}
+.elmig{width:80px;height:80px;border-radius:50%;background:var(--mid);border:3px solid var(--blue);display:flex;align-items:center;justify-content:center;font-size:2.4rem;margin:0 auto 1.2rem;box-shadow:0 0 32px var(--glow);animation:pulse 3s ease-in-out infinite}
+.gtitle{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:var(--white);margin-bottom:0.5rem}
+.gsub{color:var(--muted);font-size:0.82rem;line-height:1.6;max-width:280px;margin:0 auto 2rem}
+.acard{width:100%;max-width:320px;border:none;border-radius:20px;padding:1.2rem 1.4rem;cursor:pointer;display:flex;align-items:center;gap:1rem;text-align:left;margin-bottom:0.8rem}
+.acard:active{opacity:0.85}
+.aicon{font-size:2.2rem;flex-shrink:0}
+.atitle{color:var(--white);font-size:0.95rem;font-weight:700;display:block}
+.asub{color:rgba(255,255,255,0.55);font-size:0.72rem;margin-top:3px;line-height:1.4;display:block}
+.aarr{margin-left:auto;color:rgba(255,255,255,0.35);font-size:1.3rem}
+.disc{color:rgba(232,244,255,0.12);font-size:0.62rem;text-align:center;padding:1.5rem 1rem;line-height:1.7;max-width:320px}
+.efloat{position:fixed;top:60px;right:14px;z-index:9999;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.ebub{width:58px;height:58px;border-radius:50%;background:var(--mid);border:3px solid var(--blue);display:flex;align-items:center;justify-content:center;font-size:1.7rem;cursor:pointer;box-shadow:0 0 20px var(--glow);animation:pulse 2.5s ease-in-out infinite}
+.etip{background:rgba(13,32,69,0.96);border:1px solid rgba(45,125,210,0.4);border-radius:10px;padding:4px 10px;font-size:0.64rem;color:var(--light);white-space:nowrap}
+.twrap{flex:1;padding:1rem;display:flex;flex-direction:column;gap:0.8rem}
+.ta{width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:1rem;color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.9rem;resize:none;outline:none;min-height:160px;line-height:1.6}
+.ta::placeholder{color:rgba(232,244,255,0.22)}
+.tbtn{width:100%;padding:0.9rem;background:linear-gradient(135deg,#1a4a8a,var(--blue));border:none;border-radius:14px;color:white;font-family:'DM Sans',sans-serif;font-weight:700;font-size:0.9rem;cursor:pointer}
+.tbtn:disabled{opacity:0.3;cursor:not-allowed}
+.bbtn{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.1);border:none;color:var(--white);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.rscreen{min-height:100vh;display:flex;flex-direction:column;background:var(--navy)}
+.pstrip{width:100%;max-height:140px;object-fit:cover;display:block}
+.panels{display:grid;grid-template-columns:1fr 1fr;flex:1;min-height:300px}
+.enp{background:rgba(255,255,255,0.97);padding:1rem;overflow-y:auto}
+.trp{background:var(--card);padding:1rem;border-left:2px solid var(--blue);overflow-y:auto}
+.ctop{display:flex;align-items:center;gap:5px;margin-bottom:8px;padding-bottom:7px}
+.enp .ctop{border-bottom:1px solid #e5e9f0}
+.trp .ctop{border-bottom:1px solid rgba(255,255,255,0.08)}
+.clbl{font-weight:700;font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase}
+.enp .clbl{color:#1a4a8a}
+.trp .clbl{color:var(--light)}
+.entxt{font-size:0.78rem;line-height:1.8;color:#1a1a2e;white-space:pre-wrap;word-break:break-word}
+.trtxt{font-size:0.78rem;line-height:1.8;color:var(--white);white-space:pre-wrap;word-break:break-word}
+.arow{padding:0.7rem 0.8rem;display:flex;gap:0.5rem;background:var(--navy);border-top:1px solid rgba(255,255,255,0.06)}
+.rbtn{flex:1;padding:0.72rem 0.4rem;background:rgba(26,74,138,0.7);border:1px solid rgba(45,125,210,0.2);border-radius:12px;color:white;font-family:'DM Sans',sans-serif;font-size:0.78rem;cursor:pointer}
+.rbtn.hl{background:rgba(45,125,210,0.35)}
+.sagain{width:calc(100% - 1.6rem);margin:0 0.8rem 0.8rem;padding:0.75rem;background:linear-gradient(135deg,#0a4a2a,#0d6e3f);border:none;border-radius:12px;color:white;font-family:'DM Sans',sans-serif;font-size:0.82rem;cursor:pointer;display:block}
+.lwrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem}
+.licon{width:64px;height:64px;border-radius:50%;background:var(--mid);border:2px solid var(--blue);display:flex;align-items:center;justify-content:center;font-size:2rem;margin-bottom:1rem;animation:pulse 1.2s ease-in-out infinite}
+.lwrap p{color:var(--light);font-size:0.9rem}
+.lwrap small{color:rgba(232,244,255,0.3);font-size:0.72rem;margin-top:0.3rem;display:block;text-align:center}
+.bmod{position:fixed;inset:0;background:var(--navy);z-index:500;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem}
+.btxt{font-size:2rem;color:var(--white);line-height:1.5;text-align:center;font-weight:600;margin-bottom:1.5rem;max-width:340px}
+.bhint{color:var(--muted);font-size:0.78rem;text-align:center;margin-bottom:2rem}
+.hidden{display:none}
+@keyframes pulse{0%,100%{box-shadow:0 0 20px var(--glow)}50%{box-shadow:0 0 50px rgba(45,125,210,0.8)}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<input type="file" id="fi" class="hidden" accept="image/*"/>
+<script>
+var LANGS=[
+  {code:"Somali",flag:"🇸🇴",native:"Soomaali"},
+  {code:"Arabic",flag:"🇸🇦",native:"عربي"},
+  {code:"Polish",flag:"🇵🇱",native:"Polski"},
+  {code:"Urdu",flag:"🇵🇰",native:"اردو"},
+  {code:"Romanian",flag:"🇷🇴",native:"Română"},
+  {code:"Bengali",flag:"🇧🇩",native:"বাংলা"},
+  {code:"Hindi",flag:"🇮🇳",native:"हिन्दी"},
+  {code:"Turkish",flag:"🇹🇷",native:"Türkçe"},
+  {code:"Mandarin",flag:"🇨🇳",native:"普通话"},
+  {code:"Spanish",flag:"🇪🇸",native:"Español"},
+  {code:"French",flag:"🇫🇷",native:"Français"},
+  {code:"Portuguese",flag:"🇵🇹",native:"Português"},
+  {code:"Swahili",flag:"🇰🇪",native:"Kiswahili"},
+  {code:"Albanian",flag:"🇦🇱",native:"Shqip"},
+  {code:"Bulgarian",flag:"🇧🇬",native:"Български"},
+  {code:"Farsi",flag:"🇮🇷",native:"فارسی"},
+  {code:"Amharic",flag:"🇪🇹",native:"አማርኛ"},
+  {code:"Pashto",flag:"🇦🇫",native:"پښتو"},
+  {code:"Punjabi",flag:"🇮🇳",native:"ਪੰਜਾਬੀ"},
+  {code:"Tigrinya",flag:"🇪🇷",native:"ትግርኛ"}
+];
+
+var CLAUDE_KEY = "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";
+var S = {screen:"splash",lang:null,search:"",en:"",tr:"",loading:false,photo:null,showBig:false,txt:""};
+
+function claude(messages, max) {
+  return fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": CLAUDE_KEY,
+      "anthropic-version": "2023-06-01",
+      "anthropic-dangerous-direct-browser-access": "true"
+    },
+    body: JSON.stringify({model:"claude-haiku-4-5", max_tokens: max || 1000, messages: messages})
+  }).then(function(r) {
+    return r.json().then(function(d) {
+      if (!r.ok) throw new Error(d.error ? d.error.message : "API Error " + r.status);
+      return d.content[0].text;
+    });
+  });
+}
+
+function doTranslate(text, lang) {
+  return claude([{role:"user", content:"Translate the following English text to " + lang + ". Reply with ONLY the translation, nothing else:\n\n" + text}]);
+}
+
+function doScan(b64, mime, lang) {
+  return claude([{role:"user", content:[
+    {type:"image", source:{type:"base64", media_type:mime, data:b64}},
+    {type:"text", text:"Read all the text in this image. Then translate it to " + lang + ".\n\nReply in EXACTLY this format:\nENGLISH:\n[the text from the image]\n\nTRANSLATION:\n[the " + lang + " translation]"}
+  ]}], 2000);
+}
+
+function set(u){Object.assign(S,u);draw();}
+function mk(t,c){var e=document.createElement(t);if(c)e.className=c;return e;}
+function ap(p){for(var i=1;i<arguments.length;i++)if(arguments[i])p.appendChild(arguments[i]);return p;}
+
+function draw(){
+  var a=document.getElementById("app");
+  a.innerHTML="";
+  if(S.showBig){a.appendChild(dBig());return;}
+  var sc=null;
+  if(S.screen==="splash") sc=dSplash();
+  else if(S.screen==="langs") sc=dLangs();
+  else if(S.screen==="main") sc=dMain();
+  else if(S.screen==="type") sc=dType();
+  else if(S.screen==="result") sc=dResult();
+  if(sc) a.appendChild(sc);
+}
+
+function dSplash(){
+  var w=mk("div","splash");
+  var l=mk("div","logo"); l.textContent="🎓";
+  var t=mk("div","title"); t.textContent="WALLALO";
+  var s=mk("div","sub"); s.textContent="AI TRANSLATOR";
+  var g=mk("div","tag"); g.textContent="Your Family in the UK 🇬🇧";
+  var f=mk("div","flags"); f.textContent="🇸🇴🇸🇦🇵🇱🇵🇰🇧🇩🇮🇳🇹🇷🇨🇳🇰🇪🇪🇹";
+  ap(w,l,t,s,g,f);
+  setTimeout(function(){set({screen:"langs"});}, 2500);
+  return w;
+}
+
+function dLangs(){
+  var w=mk("div","screen");
+  var h=mk("div","lhdr");
+  var i=mk("div","lhdr-icon"); i.textContent="🎓";
+  var t=mk("h1"); t.textContent="WALLALO";
+  var p=mk("p"); p.textContent="Choose your home language";
+  ap(h,i,t,p); w.appendChild(h);
+  var sw=mk("div","swrap");
+  var si=mk("input","si"); si.placeholder="🔍 Search..."; si.value=S.search;
+  sw.appendChild(si); w.appendChild(sw);
+  var g=mk("div","lgrid");
+  function rg(){
+    g.innerHTML="";
+    LANGS.filter(function(l){return l.code.toLowerCase().includes(si.value.toLowerCase())||l.native.includes(si.value);})
+    .forEach(function(l){
+      var c=mk("div","lcard");
+      var f=mk("div","lflag"); f.textContent=l.flag;
+      var n=mk("div","lname"); n.textContent=l.code;
+      var v=mk("div","lnat"); v.textContent=l.native;
+      c.onclick=function(){set({lang:l,screen:"main"});};
+      ap(c,f,n,v); g.appendChild(c);
+    });
+  }
+  si.oninput=function(){S.search=si.value;rg();};
+  rg(); w.appendChild(g);
+  return w;
+}
+
+function dHdr(title,sub,back){
+  var h=mk("div","hdr");
+  var row=mk("div","hrow");
+  var left=mk("div","hleft");
+  if(back){var bb=mk("button","bbtn");bb.textContent="←";bb.onclick=back;left.appendChild(bb);}
+  var ic=mk("div","hicon"); ic.textContent="🎓"; left.appendChild(ic);
+  var tw=mk("div");
+  var tt=mk("div","htitle"); tt.textContent=title;
+  var ts=mk("div","hsub"); ts.textContent=sub;
+  ap(tw,tt,ts); left.appendChild(tw); row.appendChild(left);
+  if(S.lang){
+    var pill=mk("div","pill");
+    var pf=mk("span"); pf.textContent=S.lang.flag;
+    var pn=mk("span"); pn.textContent=S.lang.code;
+    ap(pill,pf,pn); pill.onclick=function(){set({screen:"langs"});};
+    row.appendChild(pill);
+  }
+  h.appendChild(row); return h;
+}
+
+function dMain(){
+  var w=mk("div","main");
+  w.appendChild(dHdr("WALLALO","Your Family in the UK 🇬🇧",null));
+  var body=mk("div","mbody");
+  var gi=mk("div","elmig"); gi.textContent="🎓";
+  var gt=mk("div","gtitle"); gt.textContent="Salaam! I'm Elmi 👋";
+  var gs=mk("div","gsub"); gs.textContent="I translate anything instantly using Claude AI!";
+  body.appendChild(gi); body.appendChild(gt); body.appendChild(gs);
+
+  var sc=mk("button","acard");
+  sc.style.background="linear-gradient(135deg,#0a4a2a,#0d6e3f)";
+  sc.style.width="100%"; sc.style.maxWidth="320px";
+  var si2=mk("div","aicon"); si2.textContent="📸";
+  var st=mk("div");
+  var sh=mk("span","atitle"); sh.textContent="Scan a Letter or Document";
+  var sp=mk("span","asub"); sp.textContent="Photo → Claude reads and translates to "+S.lang.flag+" "+S.lang.code;
+  ap(st,sh,sp);
+  var sa=mk("div","aarr"); sa.textContent="›";
+  ap(sc,si2,st,sa);
+  sc.onclick=function(){document.getElementById("fi").click();};
+  body.appendChild(sc);
+
+  var tc=mk("button","acard");
+  tc.style.background="linear-gradient(135deg,#1a3a7a,#0d2045)";
+  tc.style.width="100%"; tc.style.maxWidth="320px";
+  var ti=mk("div","aicon"); ti.textContent="🔤";
+  var tt2=mk("div");
+  var th2=mk("span","atitle"); th2.textContent="Type or Paste Text";
+  var tp2=mk("span","asub"); tp2.textContent="Type English → translates to "+S.lang.flag+" "+S.lang.code;
+  ap(tt2,th2,tp2);
+  var ta2=mk("div","aarr"); ta2.textContent="›";
+  ap(tc,ti,tt2,ta2);
+  tc.onclick=function(){set({screen:"type"});};
+  body.appendChild(tc);
+
+  var dc=mk("div","disc"); dc.textContent="WALLALO — Powered by Claude AI. Not affiliated with NHS or DVLA.";
+  body.appendChild(dc);
+  w.appendChild(body);
+
+  var ov=mk("div","efloat");
+  var tip=mk("div","etip"); tip.textContent="Tap to translate! 👆";
+  var av=mk("div","ebub"); av.textContent="🎓";
+  av.onclick=function(){alert("🎓 In the real app Elmi screenshots your screen!\nUse Scan or Type for now.");};
+  ap(ov,tip,av); w.appendChild(ov);
+  return w;
+}
+
+function dType(){
+  var w=mk("div","screen");
+  w.appendChild(dHdr("Type to Translate",S.lang.flag+" "+S.lang.code+" — Claude AI",function(){set({screen:"main"});}));
+  var wrap=mk("div","twrap");
+  var ta=mk("textarea","ta");
+  ta.placeholder="Type any English text here..."; ta.rows=6; ta.value=S.txt;
+  var btn=mk("button","tbtn");
+  btn.textContent="Translate to "+S.lang.flag+" "+S.lang.code+" →";
+  btn.disabled=!S.txt.trim();
+  ta.oninput=function(){S.txt=ta.value; btn.disabled=!ta.value.trim();};
+  btn.onclick=function(){
+    if(!ta.value.trim()) return;
+    var text=ta.value;
+    set({en:text,tr:"",loading:true,screen:"result",photo:null});
+    doTranslate(text, S.lang.code)
+    .then(function(tr){set({tr:tr,loading:false});})
+    .catch(function(e){set({tr:"Error: "+e.message,loading:false});});
+  };
+  ap(wrap,ta,btn); w.appendChild(wrap);
+  return w;
+}
+
+function dResult(){
+  var w=mk("div","rscreen");
+  w.appendChild(dHdr("Translation",S.loading?"Translating...":S.lang.flag+" "+S.lang.code,function(){set({screen:"main",photo:null,en:"",tr:""});}));
+  if(S.photo){var img=mk("img","pstrip");img.src=S.photo;w.appendChild(img);}
+  if(S.loading){
+    var lw=mk("div","lwrap");
+    var li=mk("div","licon"); li.textContent="🎓";
+    var lp=mk("p"); lp.textContent="Elmi is translating...";
+    var ls=mk("small"); ls.textContent="Claude AI → "+S.lang.flag+" "+S.lang.code;
+    ap(lw,li,lp,ls); w.appendChild(lw);
+  } else {
+    var panels=mk("div","panels");
+    var ep=mk("div","enp");
+    var et=mk("div","ctop"); et.style.borderBottom="1px solid #e5e9f0";
+    var ef=mk("span"); ef.textContent="🇬🇧";
+    var el=mk("span","clbl"); el.textContent="ENGLISH";
+    ap(et,ef,el);
+    var etx=mk("div","entxt"); etx.textContent=S.en||"No text found.";
+    ap(ep,et,etx);
+    var tp=mk("div","trp");
+    var tt3=mk("div","ctop"); tt3.style.borderBottom="1px solid rgba(255,255,255,0.08)";
+    var tf=mk("span"); tf.textContent=S.lang.flag;
+    var tl=mk("span","clbl"); tl.textContent=S.lang.code.toUpperCase();
+    ap(tt3,tf,tl);
+    var ttx=mk("div","trtxt"); ttx.textContent=S.tr||"Waiting...";
+    ap(tp,tt3,ttx);
+    ap(panels,ep,tp); w.appendChild(panels);
+    var ar=mk("div","arow");
+    var sb=mk("button","rbtn"); sb.textContent="💾 Save";
+    sb.onclick=function(){navigator.clipboard.writeText(S.tr).then(function(){alert("✅ Saved!");});};
+    var shb=mk("button","rbtn"); shb.textContent="📤 Share";
+    shb.onclick=function(){if(navigator.share)navigator.share({title:"WALLALO",text:S.tr});else{navigator.clipboard.writeText(S.tr);alert("📋 Copied!");}};
+    var bgb=mk("button","rbtn hl"); bgb.textContent="📢 Big";
+    bgb.onclick=function(){set({showBig:true});};
+    ap(ar,sb,shb,bgb); w.appendChild(ar);
+    if(S.photo){
+      var sab=mk("button","sagain"); sab.textContent="📷 Scan Another";
+      sab.onclick=function(){document.getElementById("fi").click();};
+      w.appendChild(sab);
+    }
+  }
+  return w;
+}
+
+function dBig(){
+  var w=mk("div","bmod");
+  var t=mk("div","btxt"); t.textContent=S.tr;
+  var h=mk("div","bhint"); h.textContent="Show this — "+S.lang.flag+" "+S.lang.code;
+  var c=mk("button","tbtn"); c.style.maxWidth="200px"; c.textContent="← Back";
+  c.onclick=function(){set({showBig:false});};
+  return ap(w,t,h,c);
+}
+
+document.getElementById("fi").onchange=function(e){
+  var f=e.target.files[0]; if(!f) return;
+  document.getElementById("fi").value="";
+  var rd=new FileReader();
+  rd.onload=function(ev){
+    var b64=ev.target.result.split(",")[1];
+    set({photo:ev.target.result,screen:"result",loading:true,en:"",tr:""});
+    doScan(b64, f.type, S.lang.code)
+    .then(function(r){
+      var em=r.match(/ENGLISH:\n([\s\S]*?)\n\nTRANSLATION:/);
+      var tm=r.match(/TRANSLATION:\n([\s\S]*)/);
+      set({en:em?em[1].trim():r, tr:tm?tm[1].trim():"", loading:false});
+    })
+    .catch(function(e){set({en:"Error: "+e.message,tr:"",loading:false});});
+  };
+  rd.readAsDataURL(f);
+};
+
+draw();
+</script>
+</body>
+</html>
