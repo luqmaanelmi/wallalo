@@ -112,17 +112,14 @@ var LANGS=[
   {code:"Tigrinya",flag:"🇪🇷",native:"ትግርኛ"}
 ];
 
-var CLAUDE_KEY = "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";
+var WORKER_URL = "https://wallalo-api.luqmaanelmi.workers.dev"\;
 var S = {screen:"splash",lang:null,search:"",en:"",tr:"",loading:false,photo:null,showBig:false,txt:""};
 
 function claude(messages, max) {
-  return fetch("https://api.anthropic.com/v1/messages", {
+  return fetch(WORKER_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "x-api-key": CLAUDE_KEY,
-      "anthropic-version": "2023-06-01",
-      "anthropic-dangerous-direct-browser-access": "true"
     },
     body: JSON.stringify({model:"claude-haiku-4-5", max_tokens: max || 1000, messages: messages})
   }).then(function(r) {
